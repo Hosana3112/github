@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BeninHeritage - L'âme de l'Afrique</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <style>
+        /* --- VARIABLES & RESET --- */
+        :root {
+            --primary: #1a4d2e; /* Vert Forêt profond */
+            --secondary: #d4a017; /* Or/Ocre */
+            --accent: #e0542e; /* Terre cuite */
+            --light: #f9f7f2; /* Blanc cassé / Coquille d'oeuf */
+            --dark: #2c2c2c;
+            --font-head: 'Playfair Display', serif;
+            --font-body: 'Poppins', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        a { text-decoration: none; color: inherit; transition: 0.3s; }
+        ul { list-style: none; }
+
+        /* --- ANIMATIONS --- */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* --- NAVIGATION --- */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 5%;
+            background: rgba(255, 255, 255, 0.98);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 30px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        nav.scrolled {
+            padding: 1rem 5%;
+            background: rgba(255, 255, 255, 0.98);
+        }
+
+        .logo {
+            font-family: var(--font-head);
+            font-size: 2rem;
+            color: var(--primary);
+            font-weight: 900;
+            animation: slideInLeft 1s ease;
+        }
+
+        .logo span { 
+            color: var(--secondary);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+        }
+
+        .nav-links a {
+            font-weight: 500;
+            font-size: 1rem;
+            color: var(--dark);
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--secondary);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .btn-cta {
+            padding: 0.8rem 2rem;
+            background: linear-gradient(135deg, var(--accent), #ff6b4a);
+            color: white !important;
+            border-radius: 50px;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(224, 84, 46, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .btn-cta:hover { 
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(224, 84, 46, 0.4);
+        }
+
+        /* --- HERO SECTION AVEC SLIDER --- */
+        .hero-slider {
+            height: 100vh;
+            position: relative;
+            overflow: hidden;
+            margin-top: 80px;
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            transition: opacity 1.5s ease-in-out;
+        }
+
+        .slide.active {
+            opacity: 1;
+        }
+
+        .slide::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(26, 77, 46, 0.7), rgba(212, 160, 23, 0.5));
+        }
+
+        .hero-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: white;
+            z-index: 2;
+            width: 90%;
+            max-width: 800px;
+        }
+
+        .hero-content h1 {
+            font-family: var(--font-head);
+            font-size: 4.5rem;
+            margin-bottom: 1.5rem;
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.3);
+            animation: fadeInUp 1s ease 0.5s both;
+        }
+
+        .hero-content p {
+            font-size: 1.3rem;
+            margin-bottom: 2.5rem;
+            animation: fadeInUp 1s ease 0.8s both;
+        }
+
+        .hero-btn {
+            animation: fadeInUp 1s ease 1.1s both;
+        }
+
+        /* --- SECTIONS GÉNÉRALES --- */
+        section {
+            padding: 6rem 10%;
+            position: relative;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-title h2 {
+            font-family: var(--font-head);
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--secondary), var(--accent));
+            border-radius: 2px;
+        }
+
+        .section-title p {
+            font-size: 1.1rem;
+            color: #666;
+            max-width: 600px;
+            margin: 2rem auto 0;
+        }
+
+        /* --- GRILLE CONTENU AVEC EFFETS --- */
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2.5rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            transition: all 0.4s ease;
+            position: relative;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 1;
+        }
+
+        .card:hover {
+            transform: translateY(-15px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+
+        .card:hover::before {
+            opacity: 0.1;
+        }
+
+        .card-img {
+            height: 250px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            transition: transform 0.4s ease;
+        }
+
+        .card:hover .card-img {
+            transform: scale(1.1);
+        }
+
+        .card-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.3));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .card:hover .card-overlay {
+            opacity: 1;
+        }
+
+        .card-body {
+            padding: 2rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .tag {
+            font-size: 0.8rem;
+            color: var(--accent);
+            text-transform: uppercase;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            display: inline-block;
+            padding: 0.3rem 1rem;
+            background: rgba(224, 84, 46, 0.1);
+            border-radius: 20px;
+        }
+
+        .card h3 {
+            margin-bottom: 1rem;
+            font-family: var(--font-head);
+            font-size: 1.4rem;
+            color: var(--primary);
+        }
+
+        .card p {
+            color: #666;
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.7;
+        }
+
+        .card-link {
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: gap 0.3s ease;
+        }
+
+        .card-link:hover {
+            gap: 1rem;
+            color: var(--accent);
+        }
+
+        /* --- SECTION LANGUES & RÉGIONS --- */
+        .regions-section {
+            background: linear-gradient(135deg, #e9e5db 0%, #f5f2eb 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .regions-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, var(--secondary) 0%, transparent 70%);
+            opacity: 0.1;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .region-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 4rem;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            padding: 1rem 2.5rem;
+            border: 2px solid var(--primary);
+            border-radius: 50px;
+            background: transparent;
+            color: var(--primary);
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tab-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            transition: left 0.3s ease;
+            z-index: -1;
+        }
+
+        .tab-btn.active, .tab-btn:hover {
+            color: white;
+            border-color: transparent;
+        }
+
+        .tab-btn.active::before, .tab-btn:hover::before {
+            left: 0;
+        }
+
+        .languages-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            text-align: center;
+        }
+
+        .lang-bubble {
+            background: white;
+            padding: 2rem;
+            border-radius: 50%;
+            width: 180px;
+            height: 180px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto;
+            border: 3px solid var(--secondary);
+            transition: all 0.4s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .lang-bubble::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--secondary), var(--accent));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            border-radius: 50%;
+        }
+        
+        .lang-bubble:hover {
+            transform: translateY(-10px) scale(1.05);
+            border-color: transparent;
+        }
+
+        .lang-bubble:hover::before {
+            opacity: 1;
+        }
+
+        .lang-bubble > * {
+            position: relative;
+            z-index: 2;
+            transition: all 0.3s ease;
+        }
+
+        .lang-bubble:hover > * {
+            color: white;
+        }
+
+        .lang-bubble i {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--secondary);
+        }
+
+        .lang-bubble:hover i {
+            transform: scale(1.2);
+            color: white;
+        }
+
+        /* --- AGENDA / ÉVÉNEMENTS --- */
+        .events-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .event-item {
+            display: flex;
+            align-items: center;
+            background: white;
+            margin-bottom: 2rem;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .event-item:hover {
+            transform: translateX(10px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+        }
+
+        .date-box {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            min-width: 120px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .date-box span {
+            display: block;
+            font-size: 2rem;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .date-box .month {
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-top: 0.5rem;
+        }
+
+        .event-info {
+            padding: 2rem;
+            flex: 1;
+        }
+
+        .event-info h3 {
+            font-family: var(--font-head);
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            font-size: 1.3rem;
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            background: linear-gradient(135deg, var(--dark) 0%, #1a1a1a 100%);
+            color: white;
+            padding: 5rem 10% 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        footer::before {
+            content: '';
+            position: absolute;
+            top: -100px;
+            left: -100px;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, var(--accent) 0%, transparent 70%);
+            opacity: 0.1;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            text-align: left;
+            margin-bottom: 3rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .footer-col h4 {
+            color: var(--secondary);
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .footer-col ul li {
+            margin-bottom: 0.8rem;
+            color: #ccc;
+            transition: color 0.3s ease;
+            cursor: pointer;
+        }
+
+        .footer-col ul li:hover {
+            color: white;
+            transform: translateX(5px);
+        }
+
+        .newsletter-input {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .newsletter-input input {
+            flex: 1;
+            padding: 0.8rem 1rem;
+            border: none;
+            border-radius: 25px;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            outline: none;
+        }
+
+        .newsletter-input input::placeholder {
+            color: #ccc;
+        }
+
+        .newsletter-input button {
+            padding: 0.8rem 1.5rem;
+            background: var(--secondary);
+            color: var(--dark);
+            border: none;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .newsletter-input button:hover {
+            background: var(--accent);
+            color: white;
+        }
+
+        .socials {
+            margin-top: 2rem;
+            display: flex;
+            gap: 1rem;
+        }
+
+        .socials a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 45px;
+            height: 45px;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+
+        .socials a:hover {
+            background: var(--secondary);
+            color: var(--dark);
+            transform: translateY(-3px);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid #444;
+            padding-top: 2rem;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 768px) {
+            .hero-content h1 { font-size: 2.8rem; }
+            .nav-links { display: none; }
+            .section-title h2 { font-size: 2.2rem; }
+            .languages-grid { grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+            .event-item { flex-direction: column; }
+            .date-box { width: 100%; flex-direction: row; gap: 1rem; padding: 1rem; }
+            .lang-bubble { width: 150px; height: 150px; }
+        }
+
+        @media (max-width: 480px) {
+            .hero-content h1 { font-size: 2.2rem; }
+            .section-title h2 { font-size: 1.8rem; }
+            .languages-grid { grid-template-columns: 1fr; }
+            .content-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav id="navbar">
+        <div class="logo">Benin<span>Heritage</span></div>
+        <div class="nav-links">
+            <a href="#gastronomie">Gastronomie</a>
+            <a href="#contes">Contes & Légendes</a>
+            <a href="#regions">Régions</a>
+            <a href="#agenda">Agenda</a>
+        </div>
+        <a href="#explorer" class="btn-cta">Explorer</a>
+    </nav>
+
+    <!-- Hero Section avec Slider -->
+    <div class="hero-slider">
+        <div class="slide active" style="background-image: url('https://images.unsplash.com/photo-1543364195-077a16c30ff3?q=80&w=1600&auto=format&fit=crop')"></div>
+        <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1516426122078-c23e76319801?q=80&w=1600&auto=format&fit=crop')"></div>
+        <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1556228453-efd6c1ff04f6?q=80&w=1600&auto=format&fit=crop')"></div>
+        
+        <div class="hero-content">
+            <h1>L'Héritage du Bénin</h1>
+            <p>Plongez au cœur du berceau du Vaudou, découvrez une gastronomie riche et vibrez au rythme de nos traditions ancestrales.</p>
+            <a href="#gastronomie" class="btn-cta hero-btn" style="background: rgba(255,255,255,0.2); backdrop-filter: blur(10px); border: 2px solid white;">Commencer le voyage</a>
+        </div>
+    </div>
+
+    <section id="gastronomie">
+        <div class="section-title">
+            <h2>Saveurs & Culture</h2>
+            <p>De la cuisine de rue aux contes du village, découvrez l'âme authentique du Bénin</p>
+        </div>
+
+        <div class="content-grid">
+            <div class="card">
+                <div class="card-img" style="background-image: url('https://images.unsplash.com/photo-1604329760661-e71dc83f8f26?q=80&w=800&auto=format&fit=crop')">
+                    <div class="card-overlay"></div>
+                </div>
+                <div class="card-body">
+                    <span class="tag">Recette</span>
+                    <h3>L'Amiwo au Poulet</h3>
+                    <p>La célèbre pâte rouge, emblème des festivités, accompagnée de sa viande assaisonnée et épicée à la perfection.</p>
+                    <a href="#" class="card-link">Voir la recette <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-img" style="background-image: url('https://images.unsplash.com/photo-1550974797-0f8718619642?q=80&w=800&auto=format&fit=crop')">
+                    <div class="card-overlay"></div>
+                </div>
+                <div class="card-body">
+                    <span class="tag">Conte</span>
+                    <h3>L'Araignée et la Sagesse</h3>
+                    <p>Un conte traditionnel qui explique comment la sagesse s'est répandue à travers le monde grâce à l'astuce d'Anansi.</p>
+                    <a href="#" class="card-link">Lire l'histoire <i class="fas fa-book-open"></i></a>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-img" style="background-image: url('https://images.unsplash.com/photo-1596450514735-36f047466879?q=80&w=800&auto=format&fit=crop')">
+                    <div class="card-overlay"></div>
+                </div>
+                <div class="card-body">
+                    <span class="tag">Recette</span>
+                    <h3>Igname Pilée (Ago)</h3>
+                    <p>Le plat roi du centre et du nord, servi avec une sauce arachide ou graine onctueuse, un délice authentique.</p>
+                    <a href="#" class="card-link">Voir la recette <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="regions" class="regions-section">
+        <div class="section-title">
+            <h2>Régions & Langues</h2>
+            <p>Découvrez la mosaïque culturelle et linguistique qui fait la richesse du Bénin</p>
+        </div>
+
+        <div class="region-tabs">
+            <button class="tab-btn active">Littoral & Sud</button>
+            <button class="tab-btn">Centre (Collines)</button>
+            <button class="tab-btn">Nord (Atacora/Borgou)</button>
+        </div>
+
+        <div class="languages-grid">
+            <div class="lang-bubble">
+                <i class="fas fa-comments"></i>
+                <h4>Fon</h4>
+                <small>Sud / Centre</small>
+            </div>
+            <div class="lang-bubble">
+                <i class="fas fa-comments"></i>
+                <h4>Yoruba</h4>
+                <small>Plateau / Sud</small>
+            </div>
+            <div class="lang-bubble">
+                <i class="fas fa-comments"></i>
+                <h4>Bariba</h4>
+                <small>Nord / Borgou</small>
+            </div>
+            <div class="lang-bubble">
+                <i class="fas fa-comments"></i>
+                <h4>Dendi</h4>
+                <small>Extrême Nord</small>
+            </div>
+        </div>
+    </section>
+
+    <section id="agenda">
+        <div class="section-title">
+            <h2>Événements à Venir</h2>
+            <p>Ne manquez pas les célébrations et festivals qui rythment la vie culturelle béninoise</p>
+        </div>
+
+        <div class="events-container">
+            <div class="event-item">
+                <div class="date-box">
+                    <span>10</span>
+                    <div class="month">JAN</div>
+                </div>
+                <div class="event-info">
+                    <h3>Fête Nationale du Vaudou</h3>
+                    <p>Ouidah / Grand-Popo - Célébration annuelle des divinités et cultes ancestraux avec danses et rituels traditionnels.</p>
+                    <a href="#" class="card-link">Détails <i class="fas fa-chevron-right"></i></a>
+                </div>
+            </div>
+
+            <div class="event-item">
+                <div class="date-box">
+                    <span>15</span>
+                    <div class="month">AOU</div>
+                </div>
+                <div class="event-info">
+                    <h3>Fête de l'Igname (Odoudoua)</h3>
+                    <p>Savalou - Célébration des prémices de l'igname nouvelle avec danses, chants et offrandes aux ancêtres.</p>
+                    <a href="#" class="card-link">Détails <i class="fas fa-chevron-right"></i></a>
+                </div>
+            </div>
+            
+            <div class="event-item">
+                <div class="date-box">
+                    <span>24</span>
+                    <div class="month">SEP</div>
+                </div>
+                <div class="event-info">
+                    <h3>FITHEB (Festival de Théâtre)</h3>
+                    <p>Cotonou - Le rendez-vous international du théâtre au Bénin avec des troupes venues du monde entier.</p>
+                    <a href="#" class="card-link">Détails <i class="fas fa-chevron-right"></i></a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-col">
+                <div class="logo" style="color: white; margin-bottom: 1.5rem; font-size: 2.2rem;">Benin<span>Heritage</span></div>
+                <p style="color: #ccc; line-height: 1.8;">Promouvoir la beauté et la richesse culturelle du Bénin à travers le monde. Notre mission est de préserver et partager notre héritage unique.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Explorer</h4>
+                <ul>
+                    <li>Recettes traditionnelles</li>
+                    <li>Apprendre le Fon</li>
+                    <li>Tourisme solidaire</li>
+                    <li>Artisanat local</li>
+                    <li>Musique traditionnelle</li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Newsletter</h4>
+                <p style="color: #ccc; margin-bottom: 1rem;">Recevez chaque semaine un conte ou une recette traditionnelle directement dans votre boîte mail.</p>
+                <div class="newsletter-input">
+                    <input type="email" placeholder="Votre email">
+                    <button>S'abonner</button>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p style="margin-bottom: 1.5rem; color: #ccc;">&copy; 2024 BeninHeritage. Fait avec <i class="fas fa-heart" style="color: var(--accent);"></i> pour le Bénin.</p>
+            <div class="socials">
+                <a href="#"><i class="fab fa-facebook-f"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-youtube"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Slider Hero
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        
+        function showSlide(n) {
+            slides.forEach(slide => slide.classList.remove('active'));
+            currentSlide = (n + slides.length) % slides.length;
+            slides[currentSlide].classList.add('active');
+        }
+        
+        function nextSlide() {
+            showSlide(currentSlide + 1);
+        }
+        
+        // Change slide toutes les 5 secondes
+        setInterval(nextSlide, 5000);
+        
+        // Navigation scroll effect
+        window.addEventListener('scroll', function() {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 100) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+        
+        // Animation on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+        
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animation = 'fadeInUp 1s ease forwards';
+                }
+            });
+        }, observerOptions);
+        
+        // Observer les cartes et autres éléments
+        document.querySelectorAll('.card, .lang-bubble, .event-item').forEach(el => {
+            el.style.opacity = '0';
+            observer.observe(el);
+        });
+        
+        // Tab functionality
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>
